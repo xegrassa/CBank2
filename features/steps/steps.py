@@ -33,7 +33,7 @@ def step_impl(context):
 @when('go to ru.investing')
 def step_impl(context):
     context.app.go_to_site()
-    context.app.get_screenshot_as_file('screenshots/go_to_ru_investing.png')
+    context.driver.get_screenshot_as_file('screenshots/go_to_ru_investing.png')
 
 
 @then('opened page ru.investing')
@@ -44,6 +44,7 @@ def step_impl(context):
 @when('go to menu: markets - stocks - russian')
 def step_impl(context):
     context.app.move_on_page_russian_stocks()
+    context.driver.get_screenshot_as_file('screenshots/page_russian_stocks.png')
 
 
 @then('opened page russian stocks')
