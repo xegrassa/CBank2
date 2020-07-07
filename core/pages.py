@@ -11,7 +11,7 @@ class BasePage:
 
     def __init__(self, driver):
         self.driver = driver
-        self.base_url = INVESTING_URL
+        # self.base_url = INVESTING_URL
 
     def find_element(self, locator, time=10):
         return WebDriverWait(self.driver, time).until(EC.presence_of_element_located(locator),
@@ -21,20 +21,17 @@ class BasePage:
         return WebDriverWait(self.driver, time).until(EC.presence_of_all_elements_located(locator),
                                                       message=f"Can't find elements by locator {locator}")
 
-    def go_to_site(self):
-        self.driver.get(self.base_url)
+    def go_to_site(self, url):
+        self.driver.get(url)
 
     def refresh(self):
         self.driver.refresh()
 
-    def on_site_investing(self):
-        element = self.driver.title
-        if element == 'Investing.com - котировки и финансовые новости':
-            return True
-        return False
-
     def close(self):
         self.driver.quit()
+
+    def screenshot(self, path):
+        self.driver.get_screenshot_as_file(path)
 
 
 class Stock:
@@ -50,13 +47,25 @@ class Stock:
         return self.price_last
 
 
-class SearchHelper(BasePage):
+class MainPageInvesting(BasePage):
 
-    def move_on_page_russian_stocks(self):
+    def move_on_markets(self):
         action = ActionChains(self.driver)
         action.move_to_element(self.find_element(Main_Page_Locators.LOCATOR_MARKETS_MENU))
+        action.perform()
+
+    def move_on_stocks(self):
+        action = ActionChains(self.driver)
         action.move_to_element(self.find_element(Main_Page_Locators.LOCATOR_STOCKS_SUBMENU))
+        action.perform()
+
+    def move_on_russian(self):
+        action = ActionChains(self.driver)
         action.move_to_element(self.find_element(Main_Page_Locators.LOCATOR_RUSSIAN_SUBMENU))
+        action.perform()
+
+    def click(self):
+        action = ActionChains(self.driver)
         action.click()
         action.perform()
 
@@ -66,6 +75,12 @@ class SearchHelper(BasePage):
         except:
             return False
         return True
+
+    def on_site_investing(self):
+        element = self.driver.title
+        if element == 'Investing.com - котировки и финансовые новости':
+            return True
+        return False
 
     def get_russian_stocks_table(self):
         stocks = self.find_element(Russian_Stocks_Page_Locators.LOCATOR_RUSSIAN_STOCKS_TABLE)

@@ -1,5 +1,5 @@
 from behave import *
-from core.pages import SearchHelper, Stock
+from core.pages import MainPageInvesting, Stock
 from selenium.webdriver.common.by import By
 from core.help_function import convert_str_to_float, get_data_json
 from core.storage import Storage, Web_storage
@@ -10,7 +10,7 @@ import os.path
 
 @given('chrome browser')
 def step_impl(context):
-    context.app = SearchHelper(context.driver)
+    context.app = MainPageInvesting(context.driver)
 
 
 @given('"{path_to_report_json}"')
@@ -30,10 +30,10 @@ def step_impl(context):
     web_storage.create_report_json(path_report='report/dividend.json')
 
 
-@when('go to ru.investing')
-def step_impl(context):
-    context.app.go_to_site()
-    context.driver.get_screenshot_as_file('screenshots/go_to_ru_investing.png')
+@when('go to "{url}"')
+def step_impl(context, url):
+    context.app.go_to_site(url)
+    context.app.screenshot('screenshots/go_to_ru_investing.png')
 
 
 @then('opened page ru.investing')
@@ -41,10 +41,27 @@ def step_impl(context):
     assert context.app.on_site_investing() is True
 
 
-@when('go to menu: markets - stocks - russian')
+@when('go to menu markets')
 def step_impl(context):
-    context.app.move_on_page_russian_stocks()
-    context.driver.get_screenshot_as_file('screenshots/page_russian_stocks.png')
+    context.app.move_on_markets()
+    context.app.screenshot('screenshots/main_page_menu_markets.png')
+
+
+@when('go to menu stocks')
+def step_impl(context):
+    context.app.move_on_stocks()
+    context.app.screenshot('screenshots/main_page_menu_markets_stocks.png')
+
+
+@when('go to menu russian')
+def step_impl(context):
+    context.app.move_on_russian()
+    context.app.screenshot('screenshots/main_page_menu_markets_stocks_russian.png')
+
+
+@when('click')
+def step_impl(context):
+    context.app.click()
 
 
 @then('opened page russian stocks')
