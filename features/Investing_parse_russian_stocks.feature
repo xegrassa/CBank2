@@ -1,7 +1,7 @@
 Feature: Parse russian stocks on ru.investing
 
   Scenario: Parse russian stocks
-    Given chrome browser
+    Given "chrome" browser
     When go to "http://ru.investing.com"
     Then opened page ru.investing
     When go to menu markets

@@ -6,10 +6,14 @@ from core.storage import Storage, Web_storage
 from core.parse_company_dividend import parse_divident
 import multiprocessing.dummy as multiprocessing
 import os.path
+from core.help_function import get_browser
 
 
-@given('chrome browser')
-def step_impl(context):
+@given('"{browser_name}" browser')
+def step_impl(context, browser_name):
+    context.driver = get_browser(browser_name=browser_name,
+                                 headless=context.headless,
+                                 driver_paths=context.driver_paths)
     context.app = MainPageInvesting(context.driver)
 
 

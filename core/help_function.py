@@ -2,13 +2,22 @@ from selenium import webdriver
 import json
 
 
-def get_browser(browser_name, headless, path_chromedriver):
-    if headless and browser_name == 'chrome':
+def get_browser(browser_name: str, driver_paths: dict, headless: bool = False):
+    if headless is True and browser_name == 'chrome':
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
-        return webdriver.Chrome(path_chromedriver, chrome_options=options)
+        return webdriver.Chrome(driver_paths[browser_name], chrome_options=options)
     if browser_name == 'chrome':
-        return webdriver.Chrome(path_chromedriver)
+        return webdriver.Chrome(driver_paths[browser_name])
+    if headless is True and browser_name == 'firefox':
+        options = webdriver.FirefoxOptions
+        options.add_argument('headless')
+        return webdriver.Firefox(executable_path=driver_paths[browser_name],
+                                 firefox_options=options,
+                                 firefox_binary=driver_paths['path_firefox_binary'])
+    if browser_name == 'firefox':
+        return webdriver.Firefox(executable_path=driver_paths[browser_name],
+                                 firefox_binary=driver_paths['path_firefox_binary'])
 
 
 def convert_str_to_float(string: str) -> float:
