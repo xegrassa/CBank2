@@ -35,6 +35,19 @@ class Storage:
         return sys.getsizeof(self.db)
 
 
-class Web_storage(Storage):
+class WebStorage(Storage):
     def __init__(self):
         self.db = {}
+
+
+class Stock:
+    def __init__(self, stock):
+        self.stock = stock.text
+        self.price_last = self.stock.split()[-7]
+        self.name = ' '.join(self.stock.split()[:-7])
+
+    def get_name(self):
+        return self.name
+
+    def get_last_price(self):
+        return self.price_last

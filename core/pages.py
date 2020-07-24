@@ -1,16 +1,14 @@
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from core.locators import Main_Page_Locators
 from selenium.webdriver import ActionChains
-from core.locators import Main_Page_Locators, Russian_Stocks_Page_Locators
-
-INVESTING_URL = 'https://ru.investing.com/'
+from core.locators import MainPageLocators, RussianStocksPageLocators
 
 
 class BasePage:
 
     def __init__(self, driver):
         self.driver = driver
+        self.base_url = 'https://ru.investing.com/'
 
     def find_element(self, locator, time=10):
         return WebDriverWait(self.driver, time).until(EC.presence_of_element_located(locator),
@@ -33,54 +31,65 @@ class BasePage:
         self.driver.get_screenshot_as_file(path)
 
 
-class Stock:
-    def __init__(self, stock):
-        self.stock = stock.text
-        self.price_last = self.stock.split()[-7]
-        self.name = ' '.join(self.stock.split()[:-7])
+class InvestingMainPage(BasePage):
 
-    def get_name(self):
-        return self.name
-
-    def get_last_price(self):
-        return self.price_last
-
-
-class MainPageInvesting(BasePage):
-
-    def move_on_markets(self):
+    def _move_on_markets(self):
         action = ActionChains(self.driver)
-        action.move_to_element(self.find_element(Main_Page_Locators.LOCATOR_MARKETS_MENU))
+        action.move_to_element(self.find_element(MainPageLocators.LOCATOR_MARKETS_MENU))
         action.perform()
 
-    def move_on_stocks(self):
+    def _move_on_stocks(self):
         action = ActionChains(self.driver)
-        action.move_to_element(self.find_element(Main_Page_Locators.LOCATOR_STOCKS_SUBMENU))
+        action.move_to_element(self.find_element(MainPageLocators.LOCATOR_STOCKS_SUBMENU))
         action.perform()
 
-    def move_on_russian(self):
+    def _move_on_russian(self):
         action = ActionChains(self.driver)
-        action.move_to_element(self.find_element(Main_Page_Locators.LOCATOR_RUSSIAN_SUBMENU))
+        action.move_to_element(self.find_element(MainPageLocators.LOCATOR_RUSSIAN_SUBMENU))
         action.perform()
 
-    def click(self):
+    def _click(self):
         action = ActionChains(self.driver)
         action.click()
         action.perform()
 
-    def on_page_russian_stocks(self):
-        try:
-            self.find_element(Russian_Stocks_Page_Locators.LOCATOR_PAGE_RUSSIAN_STOCKS)
-        except:
-            return False
-        return True
+    # def on_page_russian_stocks(self):
+    #     try:
+    #         self.find_element(RussianStocksPageLocators.LOCATOR_PAGE_RUSSIAN_STOCKS)
+    #     except:
+    #         return False
+    #     return True
 
-    def on_site_investing(self):
+    def go_to_russian_stocks_page(self):
+        self._move_on_markets()
+        self._move_on_stocks()
+        self._move_on_russian()
+        self._click()
+        return RussianStocksPage(self.driver)
+
+    def on_investing_main_page(self):
         element = self.driver.title
         if element == 'Investing.com - котировки и финансовые новости':
             return True
         return False
 
+    # def get_russian_stocks_table(self):
+    #     stocks = self.find_element(RussianStocksPageLocators.LOCATOR_RUSSIAN_STOCKS_TABLE)
+    #     return stocks
+
+
+class RussianStocksPage(BasePage):
+    def on_russian_stocks_page(self):
+        try:
+            self.find_element(RussianStocksPageLocators.LOCATOR_PAGE_RUSSIAN_STOCKS)
+        except:
+            return False
+        return True
+
     def get_russian_stocks_table(self):
-        stocks = self.find_element(Russian_Stocks_Page_Locators.LOCATOR_RUSSIAN_STOCKS_TABLE)
+        stocks = self.find_element(RussianStocksPageLocators.LOCATOR_RUSSIAN_STOCKS_TABLE)
         return stocks
+
+
+class CompanyPage(BasePage):
+    pass

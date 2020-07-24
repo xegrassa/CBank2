@@ -1,6 +1,7 @@
 .idea
 venv
 core/__pycache__
+web_interface/__pycache__/
 zzzzz.py
 *.json
 *.png

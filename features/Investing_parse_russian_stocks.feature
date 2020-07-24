@@ -1,20 +1,18 @@
 Feature: Parse russian stocks on ru.investing
 
+
   Scenario: Parse russian stocks
     Given "chrome" browser
-    When go to "http://ru.investing.com"
-    Then opened page ru.investing
-    When go to menu markets
-      And go to menu stocks
-      And go to menu russian
-      And click
-    Then opened page russian stocks
-    When from stocks table, get stock whose price changed on "20" percent
-      And create "report.json"
-    Then "report.json" file created
+    When Открыть страницу "http://ru.investing.com"
+    Then Открылась станица ru.investing
+    When Переходим на страницу русских акций
+    Then Открылась страница русских акций
+    When Собрать информацию о российских акциях, цена которых изменилась на "24"%
+    And Создать отчет "report.json"
+    Then "report.json" отчет создан
 
-
-  Scenario: Parse company divident
-    Given "report/report.json"
-    When run 4 parallel parse company dividend
-    Then "dividend.json" file created
+#
+#  Scenario: Parse company divident
+#    Given "report/report.json"
+#    When run 4 parallel parse company dividend
+#    Then "dividend.json" file created
