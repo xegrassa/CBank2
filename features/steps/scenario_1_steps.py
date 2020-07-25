@@ -15,9 +15,9 @@ def step_impl(context, browser_name):
     context.investing_main_page = InvestingMainPage(context.driver)
 
 
-@when('Открыть страницу "{url}"')
-def step_impl(context, url):
-    context.investing_main_page.go_to_site(url)
+@when('Открыть страницу Investing')
+def step_impl(context):
+    context.investing_main_page.go_to_main_page()
     context.investing_main_page.screenshot('screenshots/go_to_ru_investing.png')
 
 
@@ -41,14 +41,18 @@ def step_impl(context, percent):
     context.percent = int(percent)
     storage = Storage(context.path_db)
     context.web_storage = WebStorage()
-    table = context.russian_stocks_page.get_russian_stocks_table()
-    stocks = list(map(Stock, table.find_elements(By.TAG_NAME, 'tr')))
+    context.russian_stocks_page.get_russian_stocks_table()
+    stocks = context.russian_stocks_page.stocks
+    # stocks = list(map(Stock, table.find_elements(By.TAG_NAME, 'tr')))
+
+
     for company in stocks:
-        web_name, web_price = company.get_name(), convert_str_to_float(company.get_last_price())
-        db_price = convert_str_to_float(storage.get_data(web_name))
-        company_percent_change = ((web_price - db_price) / db_price) * 100
-        if company_percent_change >= context.percent:
-            context.web_storage.set_data(web_name, web_price)
+        print(company)
+        # web_name, web_price = company.get_name(), convert_str_to_float(company.get_last_price())
+        # db_price = convert_str_to_float(storage.get_data(web_name))
+        # company_percent_change = ((web_price - db_price) / db_price) * 100
+        # if company_percent_change >= context.percent:
+        #     context.web_storage.set_data(web_name, web_price)
 
 
 @when('Создать отчет "{json_name}"')

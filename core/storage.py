@@ -4,6 +4,8 @@ import os
 import os.path
 from typing import Any
 import sys
+from selenium.webdriver.common.by import *
+
 
 PATH_SQLITE_DB = '../stocks'
 NAME_REPORT_FILE = '../report/report.json'
@@ -42,9 +44,8 @@ class WebStorage(Storage):
 
 class Stock:
     def __init__(self, stock):
-        self.stock = stock.text
-        self.price_last = self.stock.split()[-7]
-        self.name = ' '.join(self.stock.split()[:-7])
+        self.price_last = stock.find_element(By.CSS_SELECTOR, 'td[class$="-last"]').text
+        self.name = stock.find_element(By.CSS_SELECTOR, '.bold.left.noWrap.elp.plusIconTd a').text
 
     def get_name(self):
         return self.name

@@ -1,14 +1,15 @@
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
+from selenium.webdriver.common.by import *
 from core.locators import MainPageLocators, RussianStocksPageLocators
+from core.storage import Stock
 
 
 class BasePage:
 
     def __init__(self, driver):
         self.driver = driver
-        self.base_url = 'https://ru.investing.com/'
 
     def find_element(self, locator, time=10):
         return WebDriverWait(self.driver, time).until(EC.presence_of_element_located(locator),
@@ -32,6 +33,9 @@ class BasePage:
 
 
 class InvestingMainPage(BasePage):
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.base_url = 'https://ru.investing.com/'
 
     def _move_on_markets(self):
         action = ActionChains(self.driver)
@@ -59,6 +63,8 @@ class InvestingMainPage(BasePage):
     #     except:
     #         return False
     #     return True
+    def go_to_main_page(self):
+        self.go_to_site(self.base_url)
 
     def go_to_russian_stocks_page(self):
         self._move_on_markets()
@@ -79,6 +85,10 @@ class InvestingMainPage(BasePage):
 
 
 class RussianStocksPage(BasePage):
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.stocks = None
+
     def on_russian_stocks_page(self):
         try:
             self.find_element(RussianStocksPageLocators.LOCATOR_PAGE_RUSSIAN_STOCKS)
@@ -87,8 +97,10 @@ class RussianStocksPage(BasePage):
         return True
 
     def get_russian_stocks_table(self):
-        stocks = self.find_element(RussianStocksPageLocators.LOCATOR_RUSSIAN_STOCKS_TABLE)
-        return stocks
+        if self.stocks is None:
+            html_stocks = self.driver.find_elements(By.CSS_SELECTOR, '#cross_rate_markets_stocks_1 > tbody tr')
+            self.stocks = map(Stock, html_stocks)
+        return self.stocks
 
 
 class CompanyPage(BasePage):
