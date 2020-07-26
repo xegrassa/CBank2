@@ -39,17 +39,17 @@ class InvestingMainPage(BasePage):
 
     def _move_on_markets(self):
         action = ActionChains(self.driver)
-        action.move_to_element(self.find_element(MainPageLocators.LOCATOR_MARKETS_MENU))
+        action.move_to_element(self.find_element(MainPageLocators.MARKETS_MENU))
         action.perform()
 
     def _move_on_stocks(self):
         action = ActionChains(self.driver)
-        action.move_to_element(self.find_element(MainPageLocators.LOCATOR_STOCKS_SUBMENU))
+        action.move_to_element(self.find_element(MainPageLocators.STOCKS_SUBMENU))
         action.perform()
 
     def _move_on_russian(self):
         action = ActionChains(self.driver)
-        action.move_to_element(self.find_element(MainPageLocators.LOCATOR_RUSSIAN_SUBMENU))
+        action.move_to_element(self.find_element(MainPageLocators.RUSSIAN_SUBMENU))
         action.perform()
 
     def _click(self):
@@ -57,12 +57,6 @@ class InvestingMainPage(BasePage):
         action.click()
         action.perform()
 
-    # def on_page_russian_stocks(self):
-    #     try:
-    #         self.find_element(RussianStocksPageLocators.LOCATOR_PAGE_RUSSIAN_STOCKS)
-    #     except:
-    #         return False
-    #     return True
     def go_to_main_page(self):
         self.go_to_site(self.base_url)
 
@@ -79,10 +73,6 @@ class InvestingMainPage(BasePage):
             return True
         return False
 
-    # def get_russian_stocks_table(self):
-    #     stocks = self.find_element(RussianStocksPageLocators.LOCATOR_RUSSIAN_STOCKS_TABLE)
-    #     return stocks
-
 
 class RussianStocksPage(BasePage):
     def __init__(self, driver):
@@ -91,14 +81,14 @@ class RussianStocksPage(BasePage):
 
     def on_russian_stocks_page(self):
         try:
-            self.find_element(RussianStocksPageLocators.LOCATOR_PAGE_RUSSIAN_STOCKS)
+            self.find_element(RussianStocksPageLocators.RUSSIAN_STOCKS_PAGE)
         except:
             return False
         return True
 
-    def get_russian_stocks_table(self):
+    def get_russian_stocks(self):
         if self.stocks is None:
-            html_stocks = self.driver.find_elements(By.CSS_SELECTOR, '#cross_rate_markets_stocks_1 > tbody tr')
+            html_stocks = self.driver.find_elements(*RussianStocksPageLocators.RUSSIAN_STOCKS_TABLE)
             self.stocks = map(Stock, html_stocks)
         return self.stocks
 

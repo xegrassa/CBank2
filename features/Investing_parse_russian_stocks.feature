@@ -3,7 +3,7 @@ Feature: Parse russian stocks on ru.investing
 
   Scenario: Parse russian stocks
     Given "chrome" browser
-    When Открыть страницу "http://ru.investing.com"
+    When Открыть страницу Investing
     Then Открылась станица ru.investing
     When Переходим на страницу русских акций
     Then Открылась страница русских акций
