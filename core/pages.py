@@ -1,8 +1,7 @@
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import *
-from core.locators import MainPageLocators, RussianStocksPageLocators
+from core.locators import MainPageLocators, RussianStocksPageLocators, RussianCompanyPageLocators
 from core.storage import Stock
 
 
@@ -88,10 +87,16 @@ class RussianStocksPage(BasePage):
 
     def get_russian_stocks(self):
         if self.stocks is None:
-            html_stocks = self.driver.find_elements(*RussianStocksPageLocators.RUSSIAN_STOCKS_TABLE)
+            html_stocks = self.find_elements(RussianStocksPageLocators.STOCKS_TABLE)
             self.stocks = map(Stock, html_stocks)
         return self.stocks
 
+    def go_to_company(self, company_name):
+        company_locator = RussianStocksPageLocators.get_company_locator(company_name)
+        self.find_element(company_locator).click()
+        return CompanyPage(self.driver)
+
 
 class CompanyPage(BasePage):
-    pass
+    def get_divident(self):
+        return self.find_element(RussianCompanyPageLocators.DIVIDENDI).text.split()[1]

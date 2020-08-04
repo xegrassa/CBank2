@@ -1,8 +1,7 @@
 from behave import *
-from core.pages import InvestingMainPage, RussianStocksPage
-from selenium.webdriver.common.by import By
+from core.pages import InvestingMainPage
 from core.help_function import convert_str_to_float
-from core.storage import Storage, WebStorage, Stock
+from core.storage import Storage, WebStorage
 import os.path
 from core.help_function import get_browser
 
@@ -17,8 +16,9 @@ def step_impl(context, browser_name):
 
 @when('Открыть страницу Investing')
 def step_impl(context):
+    screeanshot_path = os.path.join(os.getcwd(), 'screenshots', 'go_to_ru_investing.png')
     context.investing_main_page.go_to_main_page()
-    context.investing_main_page.screenshot('screenshots/go_to_ru_investing.png')
+    context.investing_main_page.screenshot(screeanshot_path)
 
 
 @then('Открылась станица ru.investing')
@@ -52,10 +52,10 @@ def step_impl(context, percent):
 
 @when('Создать отчет "{json_name}"')
 def step_impl(context, json_name):
-    context.json_name = json_name
-    context.web_storage.create_report_json(f'report/{json_name}')
+    context.report_json_path = os.path.join(os.getcwd(), 'report', json_name)
+    context.web_storage.create_report_json(context.report_json_path)
 
 
-@then('"{report_file}" отчет создан')
-def step_impl(context, report_file):
-    assert os.path.exists(f'report/{report_file}')
+@then('Отчет создан')
+def step_impl(context):
+    assert os.path.exists(context.report_json_path)

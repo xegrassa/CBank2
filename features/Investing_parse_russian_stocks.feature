@@ -9,7 +9,7 @@ Feature: Parse russian stocks on ru.investing
     Then Открылась страница русских акций
     When Собрать информацию о российских акциях, цена которых изменилась на "24"%
     And Создать отчет "report.json"
-    Then "report.json" отчет создан
+    Then Отчет создан
 
 #
 #  Scenario: Parse company divident

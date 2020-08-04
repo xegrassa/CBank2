@@ -4,11 +4,7 @@ import os
 import os.path
 from typing import Any
 import sys
-from selenium.webdriver.common.by import *
-
-
-PATH_SQLITE_DB = '../stocks'
-NAME_REPORT_FILE = '../report/report.json'
+from core.locators import StockLocator
 
 
 class Storage:
@@ -20,17 +16,17 @@ class Storage:
         self.db = dict(result)
         conn.close()
 
-    def create_report_json(self, path_report: str = None):
+    def create_report_json(self, path_report: str = None) -> None:
         if not path_report:
-            path_report = os.path.join(os.getcwd(), NAME_REPORT_FILE)
+            path_report = os.path.join(os.getcwd(), 'report', 'report.json')
+        report_json = json.dumps(self.db, indent=4, sort_keys=True, ensure_ascii=False)
         with open(path_report, 'w') as f:
-            report_json = json.dumps(self.db, indent=4, sort_keys=True, ensure_ascii=False)
             f.write(report_json)
 
     def get_data(self, key: str) -> Any:
         return self.db.get(key, None)
 
-    def set_data(self, key: str, value: Any):
+    def set_data(self, key: str, value: Any) -> None:
         self.db[key] = value
 
     def get_size(self):
@@ -44,11 +40,16 @@ class WebStorage(Storage):
 
 class Stock:
     def __init__(self, stock):
-        self.price_last = stock.find_element(By.CSS_SELECTOR, 'td[class$="-last"]').text
-        self.name = stock.find_element(By.CSS_SELECTOR, '.bold.left.noWrap.elp.plusIconTd a').text
+        self.stock = stock
+        self.last_price = None
+        self.name = None
 
     def get_name(self):
+        if self.name is None:
+            self.name = self.stock.find_element(*StockLocator.NAME).text
         return self.name
 
     def get_last_price(self):
-        return self.price_last
+        if self.last_price is None:
+            self.last_price = self.stock.find_element(*StockLocator.LAST_PRICE).text
+        return self.last_price
