@@ -3,22 +3,23 @@ from core.pages import InvestingMainPage
 from core.help_function import convert_str_to_float
 from core.storage import Storage, WebStorage
 import os.path
-from core.help_function import get_browser
+from core.help_function import BrowserCreator
 
 
-@given('"{browser_name}" browser')
+@given('"{browser_name}" браузер')
 def step_impl(context, browser_name):
-    context.driver = get_browser(browser_name=browser_name,
-                                 headless=context.headless,
-                                 driver_paths=context.driver_paths)
-    context.investing_main_page = InvestingMainPage(context.driver)
+    context.browser = BrowserCreator(browser_name=browser_name,
+                                     headless=context.headless,
+                                     firefox_binary_path=context.firefox_binary_path)
 
 
 @when('Открыть страницу Investing')
 def step_impl(context):
-    screeanshot_path = os.path.join(os.getcwd(), 'screenshots', 'go_to_ru_investing.png')
+    context.driver = context.browser.get_browser()
+    screenshot_path = os.path.join(os.getcwd(), 'screenshots', 'go_to_ru_investing.png')
+    context.investing_main_page = InvestingMainPage(context.driver)
     context.investing_main_page.go_to_main_page()
-    context.investing_main_page.screenshot(screeanshot_path)
+    context.investing_main_page.screenshot(screenshot_path)
 
 
 @then('Открылась станица ru.investing')

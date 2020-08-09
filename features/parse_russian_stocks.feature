@@ -1,8 +1,9 @@
-Feature: Parse russian stocks on ru.investing
+Feature: Сбор информации об акциях
 
 
-  Scenario: Parse russian stocks
-    Given "chrome" browser
+#  Scenario: Парсинг цен акций на investing
+    Scenario: 1
+    Given "chrome" браузер
     When Открыть страницу Investing
     Then Открылась станица ru.investing
     When Переходим на страницу русских акций
@@ -11,8 +12,11 @@ Feature: Parse russian stocks on ru.investing
     And Создать отчет "report.json"
     Then Отчет создан
 
-#
-#  Scenario: Parse company divident
-#    Given "report/report.json"
-#    When run 4 parallel parse company dividend
-#    Then "dividend.json" file created
+
+#  Scenario: Парсинг дивидендов компаний
+    Scenario: 2
+    Given Список компаний
+    And "chrome" браузер
+    When Парсинг дивидендов компаний
+    And Создать отчет "dividend.json"
+    Then Отчет создан

@@ -1,22 +1,15 @@
 from behave import *
 from core.help_function import get_data_json
-from core.storage import WebStorage
 from core.parse_company_dividend import parse_divident
-import multiprocessing.dummy as multiprocessing
+import os
 
 
-@when('run 4 parallel parse company dividend')
+@given('Список компаний')
 def step_impl(context):
-    p = multiprocessing.Pool(processes=4)
-    results = p.map(parse_divident, context.json_data)
-    p.close()
-    p.join()
-    web_storage = WebStorage()
-    for name, divident in results:
-        web_storage.set_data(name, divident)
-    web_storage.create_report_json(path_report='report/dividend.json')
+    path_to_report_json = os.path.join(os.getcwd(), 'report', 'report.json')
+    context.companies = get_data_json(path_to_report_json).keys()
 
 
-@given('"{path_to_report_json}"')
-def step_impl(context, path_to_report_json):
-    context.json_data = get_data_json(path_to_report_json)
+@when('Парсинг дивидендов компаний')
+def step_impl(context):
+    context.web_storage = parse_divident(context.companies, context.browser)
