@@ -14,13 +14,14 @@
         <td>Кол-во шагов</td>
         <td>Время прохождения</td>
     </tr>
+    {% for i in scenario %}
     <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-
+        <td>{{i.name}}</td>
+        <td>{{i.status}}</td>
+        <td>{{i.steps_count}}</td>
+        <td>{{i.time}}</td>
     </tr>
+    {% endfor %}
 </table>
 <button>Запуск</button>
 
