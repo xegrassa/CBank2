@@ -1,17 +1,22 @@
 from flask import Flask, render_template
 from core.help_function import get_data_json
 from core.parsing_behave_json import parse_behave_json_report
+import os
 
-pairs_company_divident = get_data_json(r'C:\Users\Admin\PycharmProjects\BANK_zadanie_2\report\dividend.json')
-report = parse_behave_json_report(r'C:\Users\Admin\PycharmProjects\BANK_zadanie_2\qwerty.txt')
+try:
+    behave_report = parse_behave_json_report(os.path.join(os.getcwd(), 'report', 'behave.json'))
+except:
+    behave_report = None
+try:
+    pairs_company_divident = get_data_json(os.path.join(os.getcwd(), 'report', 'dividend.json')).items()
+except:
+    pairs_company_divident = None
 app = Flask(__name__)
 
 
 @app.route('/')
 def main_page():
-    # print(pairs_company_divident, type(pairs_company_divident))
-    # print(pairs_company_divident.items())
-    return render_template('main.html', pairs=pairs_company_divident.items(), scenario=report)
+    return render_template('main.html', pairs=pairs_company_divident, scenario=behave_report)
 
 
 def run():

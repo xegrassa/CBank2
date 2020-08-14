@@ -7,4 +7,4 @@ zzzzz.py
 *.json
 *.png
 geckodriver.log
-qwerty.txt
+report/behave.json

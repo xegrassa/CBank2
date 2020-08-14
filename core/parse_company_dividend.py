@@ -4,6 +4,8 @@ from queue import Queue, Empty
 from core.storage import WebStorage
 
 THREAD_COUNT = 4
+
+
 class ParseDividentThread(threading.Thread):
     def __init__(self, queue, driver, storage):
         threading.Thread.__init__(self)
