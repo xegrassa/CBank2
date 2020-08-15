@@ -15,6 +15,7 @@ def _get_steps_count(json) -> str:
 
 
 def _get_passed_time(json) -> str:
+    """Return time sum, all steps"""
     time = 0
     for step in json['steps']:
         try:
@@ -25,12 +26,13 @@ def _get_passed_time(json) -> str:
 
 
 def parse_behave_json_report(path: str) -> List[dict]:
+    """Return data from behave report"""
     f = get_data_json(path)
-    report_about_scenario = []
+    scenario_report = []
     for scenario in f[0]['elements']:
-        report_about_scenario.append({'name': _get_scenario_name(scenario),
+        scenario_report.append({'name': _get_scenario_name(scenario),
                                       'status': _get_scenario_status(scenario),
                                       'steps_count': _get_steps_count(scenario),
                                       'time': _get_passed_time(scenario)
-                                      })
-    return report_about_scenario
+                                })
+    return scenario_report

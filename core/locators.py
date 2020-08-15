@@ -22,4 +22,4 @@ class RussianCompanyPageLocators:
 
 class StockLocator:
     NAME = (By.CSS_SELECTOR, '.bold.left.noWrap.elp.plusIconTd a')
-    LAST_PRICE = (By.CSS_SELECTOR, 'td[class$="-last"]')
+    LAST_PRICE = (By.CSS_SELECTOR, 'td[class*="-last"]')

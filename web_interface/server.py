@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from core.help_function import get_data_json
-from core.parsing_behave_json import parse_behave_json_report
+from core.parse_behave_json import parse_behave_json_report
 import os
 
 try:
@@ -12,6 +12,7 @@ try:
 except:
     pairs_company_divident = None
 app = Flask(__name__)
+print(os.getcwd())
 
 
 @app.route('/')

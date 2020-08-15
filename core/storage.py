@@ -30,6 +30,7 @@ class Storage:
         self.db[key] = value
 
     def get_size(self):
+        """Right now not work"""
         return sys.getsizeof(self.db)
 
 
@@ -45,11 +46,13 @@ class Stock:
         self.name = None
 
     def get_name(self):
+        """Return company name"""
         if self.name is None:
             self.name = self.stock.find_element(*StockLocator.NAME).text
         return self.name
 
     def get_last_price(self):
+        """Return current price company"""
         if self.last_price is None:
             self.last_price = self.stock.find_element(*StockLocator.LAST_PRICE).text
         return self.last_price
