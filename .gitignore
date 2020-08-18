@@ -1,10 +1,10 @@
 .idea
 venv
-core/__pycache__
-web_interface/__pycache__/
+investing_parse/core/__pycache__
+investing_parse/web_interface/__pycache__/
 __pycache__/
 zzzzz.py
 *.json
 *.png
 geckodriver.log
-report/behave.json
+investing_parse/report/behave.json
