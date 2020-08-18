@@ -1,5 +1,6 @@
 from selenium import webdriver
-from investing_parse import CHROMEDRIVER_PATH, GECKODRIVER_PATH, CHROME, FIREFOX
+from investing_parse import CHROMEDRIVER_PATH, GECKODRIVER_PATH, CHROME, \
+    FIREFOX
 import json
 
 
@@ -31,8 +32,7 @@ class BrowserCreator:
                                     chrome_options=self.options)
         if self.browser_name == FIREFOX:
             return webdriver.Firefox(executable_path=self.geckodriver_path,
-                                     firefox_options=self.options,
-                                     firefox_binary=self.firefox_binary_path)
+                                     firefox_options=self.options)
 
 
 def convert_str_to_float(string: str) -> float:

@@ -3,7 +3,7 @@ Feature: Сбор информации об акциях
 
 #  Scenario: Парсинг цен акций на investing
     Scenario: 1
-    Given "chrome" браузер
+    Given "firefox" браузер
     When Открыть страницу Investing
     Then Открылась станица ru.investing
     When Переходим на страницу русских акций
