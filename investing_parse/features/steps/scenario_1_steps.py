@@ -1,10 +1,12 @@
-from behave import *
-from investing_parse.core.pages import InvestingMainPage
-from investing_parse.core.help_function import convert_str_to_float
-from investing_parse.core.storage import Storage, WebStorage
 import os.path
-from investing_parse.core.help_function import BrowserCreator
+
+from behave import *
+
 from investing_parse import REPORT_DIR_PATH, SCREENSHOT_DIR_PATH
+from investing_parse.core.help_function import BrowserCreator
+from investing_parse.core.help_function import convert_str_to_float
+from investing_parse.core.pages import InvestingMainPage
+from investing_parse.core.storage import Storage, WebStorage
 
 
 @given('"{browser_name}" браузер')

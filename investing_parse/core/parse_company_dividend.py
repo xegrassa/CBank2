@@ -1,10 +1,12 @@
-from investing_parse.core.pages import InvestingMainPage
 import threading
 from queue import Queue, Empty
+
+from investing_parse.core.pages import InvestingMainPage
 from investing_parse.core.storage import WebStorage
 
 THREAD_COUNT = 4
 MAX_FAILS = 4
+
 
 class ParseDividentThread(threading.Thread):
     def __init__(self, queue, driver, storage):

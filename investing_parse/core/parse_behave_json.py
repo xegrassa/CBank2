@@ -1,5 +1,6 @@
-from investing_parse.core.help_function import get_data_json
 from typing import List
+
+from investing_parse.core.help_function import get_data_json
 
 
 def _get_scenario_name(json) -> str:

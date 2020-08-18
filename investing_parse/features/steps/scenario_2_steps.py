@@ -1,8 +1,10 @@
+import os
+
 from behave import *
+
+from investing_parse import REPORT_DIR_PATH
 from investing_parse.core.help_function import get_data_json
 from investing_parse.core.parse_company_dividend import parse_divident
-from investing_parse import REPORT_DIR_PATH
-import os
 
 
 @given('Список компаний')

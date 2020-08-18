@@ -1,8 +1,10 @@
+import os
+
 from flask import Flask, render_template
+
 from investing_parse import REPORT_DIR_PATH
 from investing_parse.core.help_function import get_data_json
 from investing_parse.core.parse_behave_json import parse_behave_json_report
-import os
 
 app = Flask(__name__)
 

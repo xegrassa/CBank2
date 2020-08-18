@@ -1,9 +1,11 @@
-import sqlite3
 import json
-import os, sys
+import os
+import sqlite3
+import sys
 from typing import Any
-from investing_parse.core.locators import StockLocator
+
 from investing_parse import REPORT_DIR_PATH
+from investing_parse.core.locators import StockLocator
 
 
 class Storage:

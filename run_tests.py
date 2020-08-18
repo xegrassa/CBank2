@@ -1,5 +1,7 @@
 import os
+
 from investing_parse import REPORT_DIR_PATH, BASE_DIR
+
 
 def main():
     print('Начало тестов behave')
