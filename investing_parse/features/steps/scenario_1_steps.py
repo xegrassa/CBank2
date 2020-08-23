@@ -34,6 +34,9 @@ def step_impl(context):
 @when('Переходим на страницу русских акций')
 def step_impl(context):
     context.russian_stocks_page = context.investing_main_page.go_to_russian_stocks_page()
+    screenshot_path = os.path.join(SCREENSHOT_DIR_PATH,
+                                   'investing_russian_stock.png')
+    context.russian_stocks_page.screenshot(screenshot_path)
 
 
 @then('Открылась страница русских акций')
@@ -41,8 +44,7 @@ def step_impl(context):
     assert context.russian_stocks_page.on_russian_stocks_page() is True
 
 
-@when(
-    'Собрать информацию о российских акциях, цена которых изменилась на "{percent}"%')
+@when('Собрать информацию о российских акциях, цена которых изменилась на "{percent}"%')
 def step_impl(context, percent):
     context.percent = int(percent)
     storage = Storage(context.path_db)

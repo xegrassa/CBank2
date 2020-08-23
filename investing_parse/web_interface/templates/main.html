@@ -33,6 +33,10 @@
 <table cols="2" border="1">
         {% if pairs %}
             <caption><h3>Отчет по акциям</h3>
+                <tr>
+                    <td>Название компании</td>
+                    <td>Процент дивидендов</td>
+                </tr>
             {% for name, divident in pairs %}
             <tr>
                 <td>{{name}}</td>

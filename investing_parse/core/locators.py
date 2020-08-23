@@ -5,6 +5,19 @@ class MainPageLocators:
     MARKETS_MENU = (By.XPATH, ".//a[@class='nav' and text() = 'Котировки']")
     STOCKS_SUBMENU = (By.XPATH, ".//a[@href='/equities/' and text() = 'Акции']")
     RUSSIAN_SUBMENU = (By.XPATH, ".//a[@href='/equities/russia' and text() = 'Россия']")
+    LOGIN_BUTTON = (By.CSS_SELECTOR, ".login.bold")
+
+
+class LoginFormLocators:
+    LOGIN_FORM = (By.CSS_SELECTOR, "#signup")
+
+    LOGIN_INPUT = (By.CSS_SELECTOR, "#loginFormUser_email")
+    PASSWORD_INPUT = (By.CSS_SELECTOR, "#loginForm_password")
+    SUBMIT_BUTTON = (By.CSS_SELECTOR, "#signup .newButton.orange")
+
+    EMAIL_ERROR = (By.CSS_SELECTOR, "#emailSigningNotify.error")
+    PASSWORD_ERROR = (By.CSS_SELECTOR, "#passwordSigningNotify.error")
+    AUTHORIZATION_ERROR = (By.CSS_SELECTOR, "#serverErrors")
 
 
 class RussianStocksPageLocators:

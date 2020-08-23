@@ -1,8 +1,10 @@
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 
-from investing_parse.core.locators import MainPageLocators, RussianStocksPageLocators, RussianCompanyPageLocators
+from investing_parse.core.locators import MainPageLocators, RussianStocksPageLocators, RussianCompanyPageLocators, \
+    LoginFormLocators
 from investing_parse.core.storage import Stock
 
 
@@ -88,6 +90,48 @@ class InvestingMainPage(BasePage):
         if element == 'Investing.com - котировки и финансовые новости':
             return True
         return False
+
+    def open_login_form(self):
+        self.find_element(MainPageLocators.LOGIN_BUTTON).click()
+        return InvestingLoginForm(self.driver)
+
+
+class InvestingLoginForm(BasePage):
+
+    def input_login(self, login):
+        self.find_element(LoginFormLocators.LOGIN_INPUT).send_keys(login)
+
+    def input_password(self, password):
+        self.find_element(LoginFormLocators.PASSWORD_INPUT).send_keys(password)
+
+    def submit(self):
+        self.find_element(LoginFormLocators.SUBMIT_BUTTON).click()
+
+    def is_open_login_form(self):
+        if self.find_element(LoginFormLocators.LOGIN_FORM):
+            return True
+        return False
+
+    def is_email_error(self):
+        try:
+            self.find_element(LoginFormLocators.EMAIL_ERROR)
+            return True
+        except TimeoutException:
+            return False
+
+    def is_password_error(self):
+        try:
+            self.find_element(LoginFormLocators.PASSWORD_ERROR)
+            return True
+        except TimeoutException:
+            return False
+
+    def is_authorization_error(self):
+        try:
+            self.find_element(LoginFormLocators.AUTHORIZATION_ERROR)
+            return True
+        except TimeoutException:
+            return False
 
 
 class RussianStocksPage(BasePage):
