@@ -14,6 +14,11 @@
   - run_web_interface - Запускает веб-интерфейс в котором отображает как прошли сценарии и отчет по диведендам компании
 
 ***
+
+### Предустановки выполняются в файле behave.ini:
+ - headless (true / false) - запуск браузера в headless режиме
+ - firefox_binary_path (C:\Program Files\Mozilla Firefox\firefox.exe) - путь до exe файла firefox в Windows. В Linux не требуется  
+***
 ### Требования:
 
 В папке "browser_webdriver" лежат версии драйверов под Win и Linux системы
