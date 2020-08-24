@@ -21,7 +21,7 @@
 ***
 ### Требования:
 
-Перед запуском скриптом установить зависимости 'pip install -r requirements.txt'
+Перед запуском скриптом установить зависимости `pip install -r requirements.txt`
 
 В папке "browser_webdriver" лежат версии драйверов под Win и Linux системы
   - chromedriver 84.0.4147.30 - требует Хром 84.0.4147.125
