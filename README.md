@@ -16,8 +16,8 @@
 ***
 
 ### Предустановки выполняются в файле behave.ini:
- - headless (true / false) - запуск браузера в headless режиме
- - firefox_binary_path (C:\Program Files\Mozilla Firefox\firefox.exe) - путь до exe файла firefox в Windows. В Linux не требуется  
+ - headless= [true / false] - запуск браузера в headless режиме
+ - firefox_binary_path= [C:\Program Files\Mozilla Firefox\firefox.exe] - путь до exe файла firefox в Windows. В Linux не требуется  
 ***
 ### Требования:
 
