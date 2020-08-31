@@ -8,14 +8,18 @@ from investing_parse import REPORT_DIR_PATH
 from investing_parse.core.locators import StockLocator
 
 
+def get_all_data_sqlite(path):
+    conn = sqlite3.connect(path)
+    cursor = conn.cursor()
+    cursor.execute("""SELECT * FROM stock_price """)
+    data = cursor.fetchall()
+    conn.close()
+    return dict(data)
+
+
 class Storage:
-    def __init__(self, path_db):
-        conn = sqlite3.connect(path_db)
-        cursor = conn.cursor()
-        cursor.execute("""SELECT * FROM stock_price """)
-        result = cursor.fetchall()
-        self.db = dict(result)
-        conn.close()
+    def __init__(self, path_db=None):
+        self.db = get_all_data_sqlite(path_db) if path_db else dict()
 
     def create_report_json(self, path_report: str = None) -> None:
         if not path_report:
@@ -34,11 +38,6 @@ class Storage:
     def get_size(self):
         """Right now not work"""
         return sys.getsizeof(self.db)
-
-
-class WebStorage(Storage):
-    def __init__(self):
-        self.db = {}
 
 
 class Stock:

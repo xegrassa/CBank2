@@ -2,7 +2,7 @@ import threading
 from queue import Queue, Empty
 
 from investing_parse.core.pages import InvestingMainPage
-from investing_parse.core.storage import WebStorage
+from investing_parse.core.storage import Storage
 
 THREAD_COUNT = 4
 MAX_FAILS = 4
@@ -61,7 +61,7 @@ def parse_divident(companies, browser):
         -companies: iterator company names
         -browser: is class BrowserCreator with pre-configured options
     """
-    web_storage = WebStorage()
+    web_storage = Storage()
     company_queue = Queue()
     for company_name in companies:
         company_queue.put(company_name)

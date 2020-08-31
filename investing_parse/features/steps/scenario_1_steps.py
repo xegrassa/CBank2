@@ -6,7 +6,7 @@ from investing_parse import REPORT_DIR_PATH, SCREENSHOT_DIR_PATH
 from investing_parse.core.help_function import BrowserCreator
 from investing_parse.core.help_function import convert_str_to_float
 from investing_parse.core.pages import InvestingMainPage
-from investing_parse.core.storage import Storage, WebStorage
+from investing_parse.core.storage import Storage
 
 
 @given('"{browser_name}" браузер')
@@ -48,7 +48,7 @@ def step_impl(context):
 def step_impl(context, percent):
     context.percent = int(percent)
     storage = Storage(context.path_db)
-    context.web_storage = WebStorage()
+    context.web_storage = Storage()
     stocks = context.russian_stocks_page.get_russian_stocks()
     for company in stocks:
         web_name, web_price = company.get_name(), convert_str_to_float(
