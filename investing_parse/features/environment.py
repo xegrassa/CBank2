@@ -1,4 +1,3 @@
-import os
 import os.path
 from configparser import ConfigParser
 
@@ -9,9 +8,3 @@ def before_scenario(context, scenario):
     context.firefox_binary_path = config.get('behave', 'firefox_binary_path')
     context.headless = config.getboolean('behave', 'headless')
     context.path_db = os.path.join(os.getcwd(), 'investing_parse', 'stocks')
-    context.driver = None
-
-
-def after_scenario(context, scenario):
-    if context.driver:
-        context.driver.quit()

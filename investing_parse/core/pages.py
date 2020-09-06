@@ -162,6 +162,11 @@ class RussianStocksPage(BasePage):
 
 
 class CompanyPage(BasePage):
-    def get_divident(self):
+    def get_dividend(self):
         """Return company dividend"""
+        print('Начал поиск элемента')
+        element = self.find_element(RussianCompanyPageLocators.DIVIDENDI)
+        print('Нашли его')
+        print(element.text)
+        return element.text.split()[1]
         return self.find_element(RussianCompanyPageLocators.DIVIDENDI).text.split()[1]

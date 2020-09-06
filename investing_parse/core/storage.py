@@ -1,10 +1,10 @@
 import json
 import os
 import sqlite3
-import sys
 from typing import Any
 
 from investing_parse import REPORT_DIR_PATH
+from investing_parse.core.help_function import convert_str_to_float
 from investing_parse.core.locators import StockLocator
 
 
@@ -21,7 +21,7 @@ class Storage:
     def __init__(self, path_db=None):
         self.db = get_all_data_sqlite(path_db) if path_db else dict()
 
-    def create_report_json(self, path_report: str = None) -> None:
+    def create_report(self, path_report: str = None) -> None:
         if not path_report:
             path_report = os.path.join(REPORT_DIR_PATH, 'report.json')
         report_json = json.dumps(self.db, indent=4, sort_keys=True,
@@ -36,8 +36,7 @@ class Storage:
         self.db[key] = value
 
     def get_size(self):
-        """Right now not work"""
-        return sys.getsizeof(self.db)
+        return len(self.db)
 
 
 class Stock:
@@ -55,6 +54,6 @@ class Stock:
     def get_last_price(self):
         """Return current price company"""
         if self.last_price is None:
-            self.last_price = self.stock.find_element(
-                *StockLocator.LAST_PRICE).text
+            price = self.stock.find_element(*StockLocator.LAST_PRICE).text
+            self.last_price = convert_str_to_float(price)
         return self.last_price

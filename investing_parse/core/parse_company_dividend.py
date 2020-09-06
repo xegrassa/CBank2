@@ -1,14 +1,16 @@
+import os
 import threading
 from queue import Queue, Empty
 
+from investing_parse import SCREENSHOT_DIR_PATH
 from investing_parse.core.pages import InvestingMainPage
 from investing_parse.core.storage import Storage
 
-THREAD_COUNT = 4
-MAX_FAILS = 4
+THREAD_COUNT = 1
+MAX_FAILS = 2
 
 
-class ParseDividentThread(threading.Thread):
+class ParseDividendThread(threading.Thread):
     def __init__(self, queue, driver, storage):
         threading.Thread.__init__(self)
         self.queue = queue
@@ -23,10 +25,10 @@ class ParseDividentThread(threading.Thread):
             except Empty:
                 self.close()
                 break
-            self.parse_divident(company_name)
+            self.get_dividend(company_name)
             self.queue.task_done()
 
-    def parse_divident(self, company_name):
+    def get_dividend(self, company_name):
         """Parse company dividend. If fails more than 4, return  None"""
         fails = 0
         while True:
@@ -35,7 +37,7 @@ class ParseDividentThread(threading.Thread):
                 investing_main_page.go_to_main_page()
                 russian_stock_page = investing_main_page.go_to_russian_stocks_page()
                 company_page = russian_stock_page.go_to_company(company_name)
-                divident = company_page.get_divident()
+                dividend = company_page.get_dividend()
             except:
                 if fails > MAX_FAILS:
                     self.storage.set_data(company_name, None)
@@ -45,14 +47,16 @@ class ParseDividentThread(threading.Thread):
                 continue
             else:
                 print(company_name, 'Done')
-                self.storage.set_data(company_name, divident)
+                screenshot_path = os.path.join(SCREENSHOT_DIR_PATH, f'{company_name}_dividend.png')
+                company_page.screenshot(screenshot_path)
+                self.storage.set_data(company_name, dividend)
                 break
 
     def close(self):
         self.driver.quit()
 
 
-def parse_divident(companies, browser):
+def parse_dividends(companies, browser):
     """
     Creates 4 thread and parse company dividend.
     Every thread get company name from Queue and put result to WebStorage.
@@ -67,7 +71,7 @@ def parse_divident(companies, browser):
         company_queue.put(company_name)
 
     for _ in range(THREAD_COUNT):
-        t = ParseDividentThread(company_queue, browser.get_browser(), web_storage)
+        t = ParseDividendThread(company_queue, browser.get_browser(), web_storage)
         t.setDaemon(True)
         t.start()
     company_queue.join()
