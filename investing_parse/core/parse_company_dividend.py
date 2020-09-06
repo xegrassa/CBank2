@@ -6,8 +6,8 @@ from investing_parse import SCREENSHOT_DIR_PATH
 from investing_parse.core.pages import InvestingMainPage
 from investing_parse.core.storage import Storage
 
-THREAD_COUNT = 1
-MAX_FAILS = 2
+THREAD_COUNT = 4
+MAX_FAILS = 4
 
 
 class ParseDividendThread(threading.Thread):

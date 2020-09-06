@@ -1,7 +1,7 @@
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import TimeoutException
 
 from investing_parse.core.locators import MainPageLocators, RussianStocksPageLocators, RussianCompanyPageLocators, \
     LoginFormLocators
@@ -164,9 +164,4 @@ class RussianStocksPage(BasePage):
 class CompanyPage(BasePage):
     def get_dividend(self):
         """Return company dividend"""
-        print('Начал поиск элемента')
-        element = self.find_element(RussianCompanyPageLocators.DIVIDENDI)
-        print('Нашли его')
-        print(element.text)
-        return element.text.split()[1]
         return self.find_element(RussianCompanyPageLocators.DIVIDENDI).text.split()[1]

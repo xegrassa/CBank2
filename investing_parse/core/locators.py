@@ -30,7 +30,6 @@ class RussianStocksPageLocators:
 
 
 class RussianCompanyPageLocators:
-    # DIVIDENDI = (By.XPATH, ".//div[@class = 'clear overviewDataTable overviewDataTableWithTooltip']/div[9]/span[2]")
     DIVIDENDI = (By.CSS_SELECTOR, ".clear.overviewDataTable.overviewDataTableWithTooltip :nth-child(9) .float_lang_base_2")
 
 
