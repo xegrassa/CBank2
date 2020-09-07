@@ -31,3 +31,11 @@ pip install -r requirements.txt
   - chromedriver 84.0.4147.30 - требует Хром 84.0.4147.125
   - geckodriver 0.27.0 - требует FireFox "79.0"
   - Python 3.8.3
+
+Если нужного драйвера нет в папке browser_webdriver 
+его можно скачать:
+   - https://chromedriver.chromium.org/downloads 
+   - https://github.com/mozilla/geckodriver/releases/
+   
+В соответствии с версией браузера и ОС. 
+Назвать chromedriver, geckodriver и положить в папку нужной ОС.
