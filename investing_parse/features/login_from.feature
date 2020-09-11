@@ -19,7 +19,7 @@ Feature: Пользователь входит в систему Investing
     Then Появилось предупреждение
 
   Scenario: Пользователь заполнил только пароль
-    Given password "letmein"
+    Given password "iampassword"
     When Пользователь пробует войти с текущим Логин и Паролем
     Then Появилось предупреждение
 
