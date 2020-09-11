@@ -7,7 +7,7 @@ def main():
     print('Начало тестов behave')
     json_path = os.path.join(REPORT_DIR_PATH, 'behave.json')
     start_dir = os.path.join(BASE_DIR, 'features')
-    command = f'behave {start_dir} -o {json_path} -f json.pretty --no-summary --no-capture'
+    command = f'behave {start_dir} --outfile {json_path} --format json.pretty --no-summary --no-capture'
     os.system(command)
     print('Конец тестов')
 

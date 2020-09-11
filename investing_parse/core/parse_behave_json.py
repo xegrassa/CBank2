@@ -28,12 +28,15 @@ def _get_passed_time(json) -> str:
 
 def parse_behave_json_report(path: str) -> List[dict]:
     """Return data from behave report"""
-    f = get_data_json(path)
+    features = get_data_json(path)
     scenario_report = []
-    for scenario in f[0]['elements']:
-        scenario_report.append({'name': _get_scenario_name(scenario),
-                                      'status': _get_scenario_status(scenario),
-                                      'steps_count': _get_steps_count(scenario),
-                                      'time': _get_passed_time(scenario)
-                                })
+
+    for feature in features:
+        for scenario in feature['elements']:
+            if scenario['keyword'] == 'Background': continue
+            scenario_report.append({'name': _get_scenario_name(scenario),
+                                    'status': _get_scenario_status(scenario),
+                                    'steps_count': _get_steps_count(scenario),
+                                    'time': _get_passed_time(scenario)
+                                    })
     return scenario_report
