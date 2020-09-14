@@ -52,3 +52,11 @@ def get_data_json(path: str):
     with open(path) as f:
         data = json.load(f)
     return data
+
+
+def get_feature_name(context):
+    """
+    Get name feature.
+    Example: 'samepath/login.feature' return 'login'
+    """
+    return os.path.split(os.path.splitext(context.feature.filename)[0])[-1]

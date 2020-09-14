@@ -1,4 +1,8 @@
+import os
+
 from behave import *
+
+from investing_parse import SCREENSHOT_DIR_PATH
 
 
 @given('Пустые Логин и Пароль')
@@ -22,6 +26,12 @@ def step_impl(context):
     context.investing_login_form.input_login(context.login)
     context.investing_login_form.input_password(context.password)
     context.investing_login_form.submit()
+    try:
+        os.mkdir(os.path.join(SCREENSHOT_DIR_PATH, context.feature_name))
+    except FileExistsError:
+        pass
+    screenshot_path = os.path.join(SCREENSHOT_DIR_PATH, context.feature_name, f'{context.scenario.name}.png')
+    context.investing_login_form.screenshot(screenshot_path)
 
 
 @when('Открыть логин форму')
