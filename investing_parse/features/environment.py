@@ -1,6 +1,7 @@
 import os.path
 from configparser import ConfigParser
 
+from investing_parse import SCREENSHOT_DIR_PATH
 from investing_parse.core.help_function import get_feature_name
 
 
@@ -15,3 +16,7 @@ def before_scenario(context, scenario):
 
 def before_feature(context, scenario):
     context.feature_name = get_feature_name(context)
+    try:
+        os.mkdir(os.path.join(SCREENSHOT_DIR_PATH, context.feature_name))
+    except FileExistsError:
+        pass

@@ -1,11 +1,11 @@
-import os.path
+import os
 
 from behave import *
 
-from investing_parse import REPORT_DIR_PATH, SCREENSHOT_DIR_PATH
-from investing_parse.core.help_function import BrowserCreator
-from investing_parse.core.help_function import convert_str_to_float
+from investing_parse import SCREENSHOT_DIR_PATH, REPORT_DIR_PATH
+from investing_parse.core.help_function import BrowserCreator, convert_str_to_float, get_data_json
 from investing_parse.core.pages import InvestingMainPage
+from investing_parse.core.parse_company_dividend import parse_dividends
 from investing_parse.core.storage import Storage
 
 
@@ -19,10 +19,10 @@ def step_impl(context, browser_name):
 @when('Открыть страницу Investing')
 def step_impl(context):
     browser = context.browser_creator.get_browser()
-    screenshot_path = os.path.join(SCREENSHOT_DIR_PATH,
-                                   'go_to_ru_investing.png')
     context.investing_main_page = InvestingMainPage(browser)
     context.investing_main_page.go_to_main_page()
+
+    screenshot_path = os.path.join(SCREENSHOT_DIR_PATH, context.feature_name, f'{context.scenario.name}.png')
     context.investing_main_page.screenshot(screenshot_path)
 
 
@@ -39,12 +39,12 @@ def step_impl(context):
 @then('Открылась страница русских акций')
 def step_impl(context):
     assert context.russian_stocks_page.on_russian_stocks_page() is True
-    screenshot_path = os.path.join(SCREENSHOT_DIR_PATH, 'investing_russian_stock.png')
-    context.russian_stocks_page.screenshot(screenshot_path)
 
 
 @when('Собрать информацию о российских акциях, цена которых изменилась на "{percent}"%')
 def step_impl(context, percent):
+    screenshot_path = os.path.join(SCREENSHOT_DIR_PATH, context.feature_name, f'{context.scenario.name}.png')
+    context.russian_stocks_page.screenshot(screenshot_path)
     context.percent = int(percent)
     context.web_storage = Storage()
 
@@ -67,3 +67,14 @@ def step_impl(context, json_name):
 @then('Отчет создан')
 def step_impl(context):
     assert os.path.exists(context.report_path)
+
+
+@given('Список компаний цена которых изменилась на определенный процент')
+def step_impl(context):
+    path_to_report_json = os.path.join(REPORT_DIR_PATH, 'report.json')
+    context.companies = get_data_json(path_to_report_json).keys()
+
+
+@when('Парсинг дивидендов компаний')
+def step_impl(context):
+    context.web_storage = parse_dividends(context.companies, context.browser_creator)
