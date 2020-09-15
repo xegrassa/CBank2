@@ -3,7 +3,8 @@ import os
 from behave import *
 
 from investing_parse import SCREENSHOT_DIR_PATH, REPORT_DIR_PATH
-from investing_parse.core.help_function import BrowserCreator, convert_str_to_float, get_data_json
+from investing_parse.core.help_function import BrowserCreator, \
+    convert_str_to_float, get_data_json
 from investing_parse.core.pages import InvestingMainPage
 from investing_parse.core.parse_company_dividend import parse_dividends
 from investing_parse.core.storage import Storage

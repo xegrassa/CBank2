@@ -3,7 +3,8 @@ import os
 from typing import Any
 
 from investing_parse import REPORT_DIR_PATH
-from investing_parse.core.help_function import convert_str_to_float, get_all_data_sqlite
+from investing_parse.core.help_function import convert_str_to_float, \
+    get_all_data_sqlite
 from investing_parse.core.locators import StockLocator
 
 

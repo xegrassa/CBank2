@@ -3,7 +3,8 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from investing_parse.core.locators import MainPageLocators, RussianStocksPageLocators, RussianCompanyPageLocators, \
+from investing_parse.core.locators import MainPageLocators, \
+    RussianStocksPageLocators, RussianCompanyPageLocators, \
     LoginFormLocators
 from investing_parse.core.storage import Stock
 
