@@ -21,6 +21,11 @@ def step_impl(context, password):
     context.password = password
 
 
+@given('login больше 256 знаков')
+def step_impl(context):
+    context.login = 'a' * 256 + '@mail.ru'
+
+
 @when('Пользователь пробует войти с текущим Логин и Паролем')
 def step_impl(context):
     context.investing_login_form.input_login(context.login)
