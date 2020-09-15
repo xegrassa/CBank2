@@ -1,20 +1,10 @@
 import json
 import os
-import sqlite3
 from typing import Any
 
 from investing_parse import REPORT_DIR_PATH
-from investing_parse.core.help_function import convert_str_to_float
+from investing_parse.core.help_function import convert_str_to_float, get_all_data_sqlite
 from investing_parse.core.locators import StockLocator
-
-
-def get_all_data_sqlite(path):
-    conn = sqlite3.connect(path)
-    cursor = conn.cursor()
-    cursor.execute("""SELECT * FROM stock_price """)
-    data = cursor.fetchall()
-    conn.close()
-    return dict(data)
 
 
 class Storage:

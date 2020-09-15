@@ -65,13 +65,13 @@ def parse_dividends(companies, browser):
         -companies: iterator company names
         -browser: is class BrowserCreator with pre-configured options
     """
-    web_storage = Storage()
+    dividend_storage = Storage()
     company_queue = Queue()
     for company_name in companies:
         company_queue.put(company_name)
 
     for _ in range(THREAD_COUNT):
-        t = ParseDividendThread(company_queue, browser.get_browser(), web_storage)
+        t = ParseDividendThread(company_queue, browser.get_browser(), dividend_storage)
         t.setDaemon(True)
         t.start()
     company_queue.join()
@@ -79,4 +79,4 @@ def parse_dividends(companies, browser):
     for thread in threading.enumerate():
         if thread.isDaemon():
             thread.close()
-    return web_storage
+    return dividend_storage

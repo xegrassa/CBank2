@@ -1,5 +1,6 @@
 import json
 import os
+import sqlite3
 
 from selenium import webdriver
 
@@ -60,3 +61,13 @@ def get_feature_name(context):
     Example: 'samepath/login.feature' return 'login'
     """
     return os.path.split(os.path.splitext(context.feature.filename)[0])[-1]
+
+
+def get_all_data_sqlite(path):
+    """ Get data from sqlite db"""
+    conn = sqlite3.connect(path)
+    cursor = conn.cursor()
+    cursor.execute("""SELECT * FROM stock_price """)
+    data = cursor.fetchall()
+    conn.close()
+    return dict(data)
