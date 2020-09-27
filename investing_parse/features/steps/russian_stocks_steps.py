@@ -8,6 +8,9 @@ from investing_parse.core.help_function import BrowserCreator, \
 from investing_parse.core.pages import InvestingMainPage
 from investing_parse.core.parse_company_dividend import parse_dividends
 from investing_parse.core.storage import Storage
+import threading
+import time
+from queue import Queue, Empty
 
 
 @given('Браузер')
@@ -87,4 +90,34 @@ def step_impl(context):
 
 @when('Парсинг дивидендов компаний')
 def step_impl(context):
-    context.web_storage = parse_dividends(context.companies, context.browser_creator)
+    context.dividend_storage = Storage()
+    company_queue = Queue()
+
+    for company_name in context.companies:
+        company_queue.put(company_name)
+    threading.local
+    try:
+        while True:
+            company = company_queue.get(timeout=5)
+            if threading.active_count()<4:
+                print('начинаем поток', company)
+                p = threading.Thread(target=context.execute_steps, args=(f'when TEST "{company}"',))
+                p.setDaemon(True)
+                p.start()
+                p.join()
+    except Empty:
+        print('Очередь ПУСТАЯ')
+    company_queue.join()
+    print('Очередь выполнена')
+
+    # context.web_storage = parse_dividends(context.companies, context.browser_creator)
+
+@when('TEST "{company_name}"')
+def step_impl(context, company_name):
+    browser = context.browser_creator.get_browser()
+    investing_main_page = InvestingMainPage(browser)
+    investing_main_page.go_to_main_page()
+    russian_stock_page = investing_main_page.go_to_russian_stocks_page()
+    company_page = russian_stock_page.go_to_company(company_name)
+    dividend = company_page.get_dividend()
+    print(company_name, dividend)
