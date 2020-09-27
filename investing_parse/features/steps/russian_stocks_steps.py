@@ -10,9 +10,9 @@ from investing_parse.core.parse_company_dividend import parse_dividends
 from investing_parse.core.storage import Storage
 
 
-@given('"{browser_name}" браузер')
-def step_impl(context, browser_name):
-    context.browser_creator = BrowserCreator(browser_name=browser_name,
+@given('Браузер')
+def step_impl(context):
+    context.browser_creator = BrowserCreator(browser_name=context.browser_name,
                                              headless=context.headless,
                                              firefox_binary_path=context.firefox_binary_path)
 
@@ -30,6 +30,15 @@ def step_impl(context):
 @then('Открылась станица ru.investing')
 def step_impl(context):
     assert context.investing_main_page.on_investing_main_page() is True
+
+
+@given('Браузер открытый на странице Investing')
+def step_impl(context):
+    context.execute_steps('''
+            given Браузер
+            when Открыть страницу Investing
+            then Открылась станица ru.investing
+        ''')
 
 
 @when('Переходим на страницу русских акций')

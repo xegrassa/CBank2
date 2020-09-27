@@ -71,3 +71,4 @@ def get_all_data_sqlite(path):
     data = cursor.fetchall()
     conn.close()
     return dict(data)
+
