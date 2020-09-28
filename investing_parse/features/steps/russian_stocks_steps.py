@@ -1,4 +1,7 @@
 import os
+import threading
+import time
+from queue import Queue, Empty
 
 from behave import *
 
@@ -6,11 +9,9 @@ from investing_parse import SCREENSHOT_DIR_PATH, REPORT_DIR_PATH
 from investing_parse.core.help_function import BrowserCreator, \
     convert_str_to_float, get_data_json
 from investing_parse.core.pages import InvestingMainPage
-from investing_parse.core.parse_company_dividend import parse_dividends
 from investing_parse.core.storage import Storage
-import threading
-import time
-from queue import Queue, Empty
+
+MAX_THREAD = 4
 
 
 @given('Браузер')
@@ -90,34 +91,37 @@ def step_impl(context):
 
 @when('Парсинг дивидендов компаний')
 def step_impl(context):
-    context.dividend_storage = Storage()
+    context.web_storage = Storage()
     company_queue = Queue()
-
     for company_name in context.companies:
         company_queue.put(company_name)
-    threading.local
-    try:
-        while True:
-            company = company_queue.get(timeout=5)
-            if threading.active_count()<4:
-                print('начинаем поток', company)
-                p = threading.Thread(target=context.execute_steps, args=(f'when TEST "{company}"',))
-                p.setDaemon(True)
+    while True:
+        if threading.active_count() - 1 < MAX_THREAD:
+            try:
+                company = company_queue.get(timeout=5)
+                p = threading.Thread(target=context.execute_steps,
+                                     daemon=True,
+                                     args=(f'when TEST "{company}"',)
+                                     )
                 p.start()
-                p.join()
-    except Empty:
-        print('Очередь ПУСТАЯ')
-    company_queue.join()
-    print('Очередь выполнена')
+            except Empty:
+                break
+    for thread in threading.enumerate():
+        if thread is not threading.main_thread():
+            thread.join()
 
-    # context.web_storage = parse_dividends(context.companies, context.browser_creator)
+
 
 @when('TEST "{company_name}"')
 def step_impl(context, company_name):
-    browser = context.browser_creator.get_browser()
-    investing_main_page = InvestingMainPage(browser)
-    investing_main_page.go_to_main_page()
-    russian_stock_page = investing_main_page.go_to_russian_stocks_page()
-    company_page = russian_stock_page.go_to_company(company_name)
-    dividend = company_page.get_dividend()
-    print(company_name, dividend)
+    try:
+        browser = context.browser_creator.get_browser()
+        investing_main_page = InvestingMainPage(browser)
+        investing_main_page.go_to_main_page()
+        russian_stock_page = investing_main_page.go_to_russian_stocks_page()
+        company_page = russian_stock_page.go_to_company(company_name)
+        dividend = company_page.get_dividend()
+        company_page.close()
+        context.web_storage.set_data(company_name, dividend)
+    except:
+        context.web_storage.set_data(company_name, None)
