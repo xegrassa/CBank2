@@ -1,18 +1,15 @@
 import os
 import threading
-import sys
 from queue import Queue, Empty
 
 from behave import *
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import WebDriverException
 
 from investing_parse import SCREENSHOT_DIR_PATH, REPORT_DIR_PATH
 from investing_parse.core.help_function import BrowserCreator, \
     convert_str_to_float, get_data_json
 from investing_parse.core.pages import InvestingMainPage
 from investing_parse.core.storage import Storage
-
-MAX_THREAD = 3
 
 
 @given('Браузер')
@@ -90,19 +87,22 @@ def step_impl(context):
     context.companies = get_data_json(path_to_report_json).keys()
 
 
-@when('Парсинг дивидендов компаний')
+@when('Парсинг дивидендов компаний в 4 потока')
 def step_impl(context):
+    max_thread = 4
     context.web_storage = Storage()
     company_queue = Queue()
     for company_name in context.companies:
         company_queue.put(company_name)
     while True:
-        if threading.active_count() - 1 < MAX_THREAD:
+        if threading.active_count() - 1 < max_thread:
             try:
                 company = company_queue.get(timeout=5)
+                print('Взяли из очереди ', company)
+                print('Кол-во потоков', threading.active_count() - 1)
                 p = threading.Thread(target=context.execute_steps,
                                      daemon=True,
-                                     args=(f'when TEST "{company}"',)
+                                     args=(f'when Получить дивиденды у компании "{company}"',)
                                      )
                 p.start()
             except Empty:
@@ -112,22 +112,24 @@ def step_impl(context):
             thread.join()
 
 
-@when('TEST "{company_name}"')
+@when('Получить дивиденды у компании "{company_name}"')
 def step_impl(context, company_name):
-    try:
-        browser = context.browser_creator.get_browser()
-        investing_main_page = InvestingMainPage(browser)
-        investing_main_page.go_to_main_page()
-        russian_stock_page = investing_main_page.go_to_russian_stocks_page()
-        try:
-            company_page = russian_stock_page.go_to_company(company_name)
-        except StaleElementReferenceException:
+    browser = context.browser_creator.get_browser()
+    investing_main_page = InvestingMainPage(browser)
+    max_fails, fails = 4, 0
+    while True:
+        if fails > max_fails:
             context.web_storage.set_data(company_name, None)
-            sys.exit(1)
-        dividend = company_page.get_dividend()
-        context.web_storage.set_data(company_name, dividend)
-    except TimeoutException:
-        print('TimeoutError')
-        context.web_storage.set_data(company_name, None)
-    finally:
-        company_page.close()
+            break
+        try:
+            investing_main_page.go_to_main_page()
+            russian_stock_page = investing_main_page.go_to_russian_stocks_page()
+            company_page = russian_stock_page.go_to_company(company_name)
+            dividend = company_page.get_dividend()
+            context.web_storage.set_data(company_name, dividend)
+            break
+        except WebDriverException as e:
+            print('WebDriverException у ', company_name, max_fails, fails)
+            fails += 1
+            continue
+    company_page.close()
