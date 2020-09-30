@@ -1,17 +1,16 @@
 import os
 import threading
-import time
 from queue import Queue, Empty
-
+from selenium.common.exceptions import StaleElementReferenceException
 from behave import *
-
+import traceback
 from investing_parse import SCREENSHOT_DIR_PATH, REPORT_DIR_PATH
 from investing_parse.core.help_function import BrowserCreator, \
     convert_str_to_float, get_data_json
 from investing_parse.core.pages import InvestingMainPage
 from investing_parse.core.storage import Storage
 
-MAX_THREAD = 4
+MAX_THREAD = 3
 
 
 @given('Браузер')
@@ -119,9 +118,19 @@ def step_impl(context, company_name):
         investing_main_page = InvestingMainPage(browser)
         investing_main_page.go_to_main_page()
         russian_stock_page = investing_main_page.go_to_russian_stocks_page()
+    except Exception as e:
+        traceback.print_exception()
+        print(e)
+        traceback.print_exc()
+        context.web_storage.set_data(company_name, 'xz')
+        raise Exception
+
+    try:
         company_page = russian_stock_page.go_to_company(company_name)
+    except StaleElementReferenceException:
+        context.web_storage.set_data(company_name, None)
+    else:
         dividend = company_page.get_dividend()
         company_page.close()
         context.web_storage.set_data(company_name, dividend)
-    except:
-        context.web_storage.set_data(company_name, None)
+
