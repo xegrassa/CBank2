@@ -1,9 +1,11 @@
 import os
 import threading
+import sys
 from queue import Queue, Empty
-from selenium.common.exceptions import StaleElementReferenceException
+
 from behave import *
-import traceback
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
+
 from investing_parse import SCREENSHOT_DIR_PATH, REPORT_DIR_PATH
 from investing_parse.core.help_function import BrowserCreator, \
     convert_str_to_float, get_data_json
@@ -110,7 +112,6 @@ def step_impl(context):
             thread.join()
 
 
-
 @when('TEST "{company_name}"')
 def step_impl(context, company_name):
     try:
@@ -118,19 +119,15 @@ def step_impl(context, company_name):
         investing_main_page = InvestingMainPage(browser)
         investing_main_page.go_to_main_page()
         russian_stock_page = investing_main_page.go_to_russian_stocks_page()
-    except Exception as e:
-        traceback.print_exception()
-        print(e)
-        traceback.print_exc()
-        context.web_storage.set_data(company_name, 'xz')
-        raise Exception
-
-    try:
-        company_page = russian_stock_page.go_to_company(company_name)
-    except StaleElementReferenceException:
-        context.web_storage.set_data(company_name, None)
-    else:
+        try:
+            company_page = russian_stock_page.go_to_company(company_name)
+        except StaleElementReferenceException:
+            context.web_storage.set_data(company_name, None)
+            sys.exit(1)
         dividend = company_page.get_dividend()
-        company_page.close()
         context.web_storage.set_data(company_name, dividend)
-
+    except TimeoutException:
+        print('TimeoutError')
+        context.web_storage.set_data(company_name, None)
+    finally:
+        company_page.close()
