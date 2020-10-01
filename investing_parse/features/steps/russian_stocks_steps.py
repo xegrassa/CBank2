@@ -119,6 +119,7 @@ def step_impl(context, company_name):
     max_fails, fails = 4, 0
     while True:
         if fails > max_fails:
+            print(f'Кол-во ошибок превышено. Компания {company_name} не будет спарсена')
             context.web_storage.set_data(company_name, None)
             break
         try:
@@ -129,7 +130,7 @@ def step_impl(context, company_name):
             context.web_storage.set_data(company_name, dividend)
             break
         except WebDriverException as e:
-            print('WebDriverException у ', company_name, max_fails, fails)
+            print('WebDriverException у {}. {}/{} ошибка'.format(company_name, fails, max_fails))
             fails += 1
             continue
     company_page.close()
