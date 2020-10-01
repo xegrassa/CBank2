@@ -98,8 +98,6 @@ def step_impl(context):
         if threading.active_count() - 1 < max_thread:
             try:
                 company = company_queue.get(timeout=5)
-                print('Взяли из очереди ', company)
-                print('Кол-во потоков', threading.active_count() - 1)
                 p = threading.Thread(target=context.execute_steps,
                                      daemon=True,
                                      args=(f'when Получить дивиденды у компании "{company}"',)
